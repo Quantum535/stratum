@@ -1034,6 +1034,7 @@ p {
 }
 
 .evidence-card {
+	position: relative;
 	overflow: hidden;
 }
 
@@ -1053,6 +1054,41 @@ p {
 	max-height: 620px;
 	object-fit: contain;
 	background: #ffffff;
+}
+
+.evidence-hover {
+	position: absolute;
+	inset: auto 14px 14px;
+	display: grid;
+	gap: 7px;
+	padding: 14px;
+	border: 1px solid rgba(216, 222, 233, 0.82);
+	border-radius: 8px;
+	background: rgba(255, 255, 255, 0.94);
+	box-shadow: 0 14px 34px rgba(15, 23, 42, 0.16);
+	opacity: 0;
+	transform: translateY(10px);
+	transition:
+		opacity 180ms ease,
+		transform 180ms ease;
+}
+
+.evidence-card:hover .evidence-hover,
+.evidence-card:focus-within .evidence-hover {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.evidence-hover strong {
+	color: #111827;
+	font-size: 14px;
+}
+
+.evidence-hover p {
+	margin: 0;
+	color: #4b5563;
+	font-size: 13px;
+	line-height: 1.45;
 }
 
 .download-cta {

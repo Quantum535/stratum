@@ -21,6 +21,15 @@ const screenshots = {
 	githubOpen: "/assets/screenshots/github-open.png",
 };
 
+const screenshotEvidence = [
+	["Manager workflow", screenshots.managerWorkflow, "Manager-only chat beside a live workflow feed for handoffs, compaction events, retries, and worker reports."],
+	["Worker grid", screenshots.workerGrid, "Parallel frontend, runtime, test, and review workers stay visible while the manager verifies their outputs."],
+	["LaTeX workspace", screenshots.latex, "LaTeX editor with files, outline navigation, compile controls, syntax highlighting, and PDF preview."],
+	["GitHub review", screenshots.githubDiff, "Diff review surface for local changes, release checks, file summaries, and approval workflow."],
+	["Notes", screenshots.notes, "Persistent project memory for decisions, blockers, useful commands, and context that should outlive the chat."],
+	["Model selector", screenshots.modelSelector, "Manager and worker model selection across cloud and local providers with capability filters."],
+];
+
 const proofMetrics = [
 	["5", "parallel agents"],
 	["128K", "tracked context"],
@@ -359,25 +368,26 @@ function ScreenshotEvidence() {
 					<p className="eyebrow">Evidence</p>
 					<h2>Real Stratum surfaces, below the product narrative.</h2>
 				</div>
-				<p>These screenshots stay on the page as proof, while the hero explains the system instead of relying on a single static capture.</p>
+				<p>Hover a screenshot to see what part of the desktop workflow it represents.</p>
 			</div>
 			<div className="evidence-grid">
-				<ScreenshotCard title="Manager workflow" src={screenshots.managerWorkflow} />
-				<ScreenshotCard title="Worker grid" src={screenshots.workerGrid} />
-				<ScreenshotCard title="LaTeX workspace" src={screenshots.latex} />
-				<ScreenshotCard title="GitHub review" src={screenshots.githubDiff} />
-				<ScreenshotCard title="Notes" src={screenshots.notes} />
-				<ScreenshotCard title="Model selector" src={screenshots.modelSelector} />
+				{screenshotEvidence.map(([title, src, body]) => (
+					<ScreenshotCard key={title} title={title} src={src} body={body} />
+				))}
 			</div>
 		</section>
 	);
 }
 
-function ScreenshotCard({ title, src }) {
+function ScreenshotCard({ title, src, body }) {
 	return (
 		<article className="evidence-card">
 			<div className="evidence-title">{title}</div>
 			<img src={src} alt={`${title} screenshot`} />
+			<div className="evidence-hover">
+				<strong>{title}</strong>
+				<p>{body}</p>
+			</div>
 		</article>
 	);
 }
@@ -521,7 +531,7 @@ function Download() {
 				<p>
 					This installer includes the current Stratum desktop build. Windows may show an unsigned-app warning until code signing is configured.
 				</p>
-				<a className="download-button" href="/downloads/stratum-setup.exe" download>
+				<a className="download-button" href="https://github.com/Kushalk0677/stratum/releases/latest/download/stratum-setup.exe">
 					Download stratum Setup 0.0.1.exe
 				</a>
 				<div className="download-notes">
