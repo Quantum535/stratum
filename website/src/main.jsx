@@ -435,7 +435,7 @@ function HeroIntro({ onNavigate }) {
 		<div className="hero-copy" onClick={onNavigate}>
 			<img className="hero-logo" src="/assets/app-logo.png" alt="Stratum logo" />
 			<p className="eyebrow">Product OS for manager-led agents</p>
-			<h1>Run serious AI work without losing the thread.</h1>
+			<h1>Enter the next generation of AI workspace.</h1>
 			<p className="hero-text">
 				Stratum is a Windows workspace where a manager agent plans the run, workers execute scoped tasks, tools stay visible, and project memory carries forward.
 			</p>
