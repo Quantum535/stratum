@@ -15,7 +15,6 @@ export default defineConfig({
 				features: resolve(__dirname, "features/index.html"),
 				useCases: resolve(__dirname, "use-cases/index.html"),
 				localModels: resolve(__dirname, "local-models/index.html"),
-				documentation: resolve(__dirname, "documentation/index.html"),
 				download: resolve(__dirname, "download/index.html"),
 			},
 		},
