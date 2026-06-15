@@ -1,5 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { createPortal } from "react-dom";
 import {
 	Counter,
 	Cursor,
@@ -1846,7 +1847,53 @@ function SupervisionControls() {
 	);
 }
 
+function SurfaceGroupOverlay({ group, open }) {
+	if (typeof document === "undefined" || !group) return null;
+	const [, images, labels] = group;
+	return createPortal(
+		<div className={`surface-group-overlay${open ? " is-open" : ""}`} aria-hidden="true">
+			<div className="surface-group-overlay-scrim" />
+			<div className="surface-group-overlay-row">
+				{images.map((src, index) => (
+					<figure key={src} className="surface-group-overlay-item" style={{ "--i": index }}>
+						<img src={src} alt="" />
+						<figcaption>{labels[index]}</figcaption>
+					</figure>
+				))}
+			</div>
+		</div>,
+		document.body
+	);
+}
+
 function SurfaceGroups() {
+	const [active, setActive] = React.useState(null);
+	const lastRef = React.useRef(0);
+	const closeTimer = React.useRef(null);
+	const canHover =
+		typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+	const open = (index) => {
+		if (!canHover) return;
+		if (closeTimer.current) {
+			window.clearTimeout(closeTimer.current);
+			closeTimer.current = null;
+		}
+		lastRef.current = index;
+		setActive(index);
+	};
+	const scheduleClose = (index) => {
+		if (closeTimer.current) window.clearTimeout(closeTimer.current);
+		closeTimer.current = window.setTimeout(() => setActive((cur) => (cur === index ? null : cur)), 90);
+	};
+
+	React.useEffect(
+		() => () => {
+			if (closeTimer.current) window.clearTimeout(closeTimer.current);
+		},
+		[]
+	);
+
 	return (
 		<section className="section surface-groups-section reveal">
 			<div className="section-heading split-heading">
@@ -1855,15 +1902,20 @@ function SurfaceGroups() {
 					<h2>Dedicated panels map to the jobs inside a run.</h2>
 				</div>
 				<p>
-					The screenshots are not just UI inventory. They show how Stratum separates inspection, building, review, and operations into visible surfaces.
+					The screenshots are not just UI inventory. They show how Stratum separates inspection, building, review, and operations into visible surfaces. Hover a group to blow its surfaces up full screen.
 				</p>
 			</div>
 			<div className="surface-group-grid">
-				{surfaceGroups.map(([title, images, labels]) => (
-					<article key={title} className="surface-group-card">
-						<div className="surface-group-images">
-							{images.map((src, index) => (
-								<img key={`${title}-${src}`} src={src} alt={`${labels[index]} screenshot`} />
+				{surfaceGroups.map(([title, images, labels], index) => (
+					<article
+						key={title}
+						className="surface-group-card"
+						onPointerEnter={() => open(index)}
+						onPointerLeave={() => scheduleClose(index)}
+					>
+						<div className="surface-group-fan">
+							{images.map((src, i) => (
+								<img key={`${title}-${src}`} src={src} alt={`${labels[i]} screenshot`} loading="lazy" />
 							))}
 						</div>
 						<h3>{title}</h3>
@@ -1875,6 +1927,7 @@ function SurfaceGroups() {
 					</article>
 				))}
 			</div>
+			<SurfaceGroupOverlay group={surfaceGroups[lastRef.current]} open={active !== null} />
 		</section>
 	);
 }
